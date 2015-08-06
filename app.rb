@@ -9,7 +9,7 @@ class UtsushimiCall < Sinatra::Base
   register Sinatra::Reloader
 
   SLACK_HOOK_URL = ENV["SLACK_HOOK_URL"].dup.freeze
-
+  RECORD_SECONDS = 30
   # get "/" do
   #   Twilio::TwiML::Response.new do |r|
   #     r.Gather numDigits: "1", action: "/records/new", method: "get" do |g|
@@ -22,7 +22,9 @@ class UtsushimiCall < Sinatra::Base
     Twilio::TwiML::Response.new do |r|
       r.Say "こんにちは", language: "ja-jp"
       r.Say "トーン音の、あとに、おはなしください", language: "ja-jp"
-      r.Record maxLength: "5", action: "/records", method: "post"
+      r.Say "#{RECORD_SECONDS}秒、録音できます", language: "ja-jp"
+
+      r.Record maxLength: RECORD_SECONDS, action: "/records", method: "post"
     end.text
   end
 
