@@ -3,7 +3,7 @@ require "sinatra/reloader"
 require "open-uri"
 require "pry"
 require "slack-poster"
-require 'twilio-ruby'
+require "twilio-ruby"
 
 class UtsushimiCall < Sinatra::Base
   register Sinatra::Reloader
@@ -29,7 +29,7 @@ class UtsushimiCall < Sinatra::Base
   post "/records" do
     response = Twilio::TwiML::Response.new do |r|
       r.Say "録音しました", language: "ja-jp"
-      r.Say 'Goodbye.'
+      r.Say "Goodbye."
     end.text
 
     # File.open("voice-#{Time.now.strftime("%Y%m%d_%H%M%S_%N")}.wav", "wb") { |f| f.print(open(params['RecordingUrl']).read) }
