@@ -18,6 +18,11 @@ class UtsushimiCall < Sinatra::Base
     @poster = Slack::Poster.new(settings.slack_hook_url)
   end
 
+  # for check
+  get "/ping" do
+    "pong"
+  end
+
   get "/records/new" do
     @poster.send_message "#{params['From']}から着信中です"
 
