@@ -5,16 +5,17 @@ require "pry"
 require "slack-poster"
 require "twilio-ruby"
 
-unless SLACK_HOOK_URL
-  SLACK_HOOK_URL = ENV["SLACK_HOOK_URL"].dup.freeze
-  RECORD_SECONDS = 30
-end
 
 class UtsushimiCall < Sinatra::Base
   register Sinatra::Reloader
 
+  configure do
+    set slack_hook_url: ENV["SLACK_HOOK_URL"].dup.freeze
+    set record_seconds: 30
+  end
+
   before do
-    @poster = Slack::Poster.new(SLACK_HOOK_URL)
+    @poster = Slack::Poster.new(settings.slack_hook_url)
   end
 
   get "/records/new" do
@@ -23,9 +24,9 @@ class UtsushimiCall < Sinatra::Base
     Twilio::TwiML::Response.new do |r|
       r.Say "こんにちは", language: "ja-jp"
       r.Say "トーン音の、あとに、おはなしください", language: "ja-jp"
-      r.Say "#{RECORD_SECONDS}秒、録音できます", language: "ja-jp"
+      r.Say "#{settings.record_seconds}秒、録音できます", language: "ja-jp"
 
-      r.Record maxLength: RECORD_SECONDS, action: "/records", method: "post"
+      r.Record maxLength: settings.record_seconds, action: "/records", method: "post"
     end.text
   end
 
