@@ -7,4 +7,9 @@ gem "twilio-ruby"
 
 group :development do
   gem "pry"
+  gem "thin"
+end
+
+group :production do
+  gem "unicorn"
 end
