@@ -5,11 +5,14 @@ require "pry"
 require "slack-poster"
 require "twilio-ruby"
 
+unless SLACK_HOOK_URL
+  SLACK_HOOK_URL = ENV["SLACK_HOOK_URL"].dup.freeze
+  RECORD_SECONDS = 30
+end
+
 class UtsushimiCall < Sinatra::Base
   register Sinatra::Reloader
 
-  SLACK_HOOK_URL = ENV["SLACK_HOOK_URL"].dup.freeze
-  RECORD_SECONDS = 30
   # get "/" do
   #   Twilio::TwiML::Response.new do |r|
   #     r.Gather numDigits: "1", action: "/records/new", method: "get" do |g|
