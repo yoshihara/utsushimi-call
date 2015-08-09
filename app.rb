@@ -18,6 +18,8 @@ class UtsushimiCall < Sinatra::Base
   end
 
   get "/records/new" do
+    @poster.send_message "#{params['From']}から着信中です"
+
     Twilio::TwiML::Response.new do |r|
       r.Say "こんにちは", language: "ja-jp"
       r.Say "トーン音の、あとに、おはなしください", language: "ja-jp"
@@ -33,7 +35,7 @@ class UtsushimiCall < Sinatra::Base
       r.Say "Goodbye."
     end.text
 
-    @poster.send_message "#{params['From']}から電話がありました。\n #{params['RecordingUrl']}"
+    @poster.send_message "#{params['From']}から電話がありました\n #{params['RecordingUrl']}"
 
     response
   end
