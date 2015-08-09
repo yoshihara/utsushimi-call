@@ -13,13 +13,9 @@ end
 class UtsushimiCall < Sinatra::Base
   register Sinatra::Reloader
 
-  # get "/" do
-  #   Twilio::TwiML::Response.new do |r|
-  #     r.Gather numDigits: "1", action: "/records/new", method: "get" do |g|
-  #       g.Say "いち、を、おしてください", language: "ja-jp"
-  #     end
-  #   end.text
-  # end
+  before do
+    @poster = Slack::Poster.new(SLACK_HOOK_URL)
+  end
 
   get "/records/new" do
     Twilio::TwiML::Response.new do |r|
@@ -37,10 +33,7 @@ class UtsushimiCall < Sinatra::Base
       r.Say "Goodbye."
     end.text
 
-    # File.open("voice-#{Time.now.strftime("%Y%m%d_%H%M%S_%N")}.wav", "wb") { |f| f.print(open(params['RecordingUrl']).read) }
-
-    poster = Slack::Poster.new(SLACK_HOOK_URL)
-    poster.send_message "#{params['From']}から電話がありました。\n #{params['RecordingUrl']}"
+    @poster.send_message "#{params['From']}から電話がありました。\n #{params['RecordingUrl']}"
 
     response
   end
